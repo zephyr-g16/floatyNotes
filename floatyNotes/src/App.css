@@ -1,0 +1,172 @@
+html, body, #root { height: 100%; }
+body { margin: 0 }
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.container {
+  margin: 0;
+  padding-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #2f2f2f;
+  }
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.noteItem {
+	display: block;
+	width: 100%;
+	cursor: pointer;
+	user-select: none;
+	transition: background 120ms ease, color 120ms ease;
+	border-radius: 8px;
+	padding: 0px;
+	color: #bbb;
+}
+
+.noteItem:hover {
+	background: #333333;
+	border-radius: 8px;
+	padding: 2px;
+	color: #eee;
+}
+
+.noteItem:active {
+	transform: scale(0.97);
+}
+
+.noteItem.selected {
+	background: #424242;
+	color: #eee;
+}
+
+.noteItem:focus-visible {
+	outline: 1px solid #3b82f6;
+	outline-offset: 1px;
+}
+
+.mainCard {
+	border-radius: 8px;
+	padding: 8px;
+	overflow: auto;
+	margin-left: 12px;
+}
+
+button {
+	border-radius: 8px;
+	padding: 4px;
+	color: #bbb;
+	border: none;
+	background: none;
+	max-height: 24px;
+	curser: pointer;
+	transition: background 120ms ease;
+	user-select: none;
+}
+
+button:hover {
+	background: #5b6699;
+	max-height: 26px;
+	box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+	margin-bottom: 2px;
+	color: #eee;
+}
+
+button:active {
+	transform: scale(0.92);
+	background: #3d4466;
+}
+
+button:focus-visible {
+	outline: 1px solid #3b82f6;
+	outline-offset: 1px;
+}
+
+.noteSearch {
+	width: 100%;
+	font-size: 14px;
+	max-height: 24px;
+	border-radius: 12px;
+	color: #bbb;
+	border: none;
+	padding: 4px;
+	background: none;
+	border: 1px solid #333333;
+}
+
+.noteSearch:focus-visible {
+	background: #333333;
+	color: #eee;
+	outline: 1px solid #333333;
+	outline-offset: 1px;
+	transform: scale(1.03);
+	padding: 8px;
+}
+
+aside {
+	position: absolute;
+	padding: 8px;
+	top: 0;
+	bottom: 0;
+	width: 240px;
+	background: #383938;
+	padding: 8px;
+	overflowY: auto;
+	border-radius: 8px;
+	font-size: 14px;
+}
+
+input {
+	background: none;
+	color: #bbb;
+	font-size: 24px;
+	border-radius: 8px;
+	border: none;
+}
+
+input:focus-visible {
+	outline: none;
+}
+
+textarea {
+	background: none;
+	color: #bbb;
+	font-size: 14px;
+	border-radius: 8px;
+	border: none;
+}
+
+textarea:focus-visible {
+	outline: none;
+}
