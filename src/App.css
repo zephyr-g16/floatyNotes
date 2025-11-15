@@ -90,7 +90,7 @@ button {
 	border: none;
 	background: none;
 	max-height: 24px;
-	curser: pointer;
+	cursor: pointer;
 	transition: background 120ms ease;
 	user-select: none;
 }
@@ -142,7 +142,7 @@ aside {
 	width: 240px;
 	background: #383938;
 	padding: 8px;
-	overflowY: auto;
+	overflow-y: auto;
 	border-radius: 8px;
 	font-size: 14px;
 }
