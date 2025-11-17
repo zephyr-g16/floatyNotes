@@ -12,11 +12,20 @@ pub struct Note {
     pub content: String,
 }
 
+pub struct Settings {
+    pub open_same: bool,
+    pub key_cmd: String,
+}
+
 // -----Function to get to the notes file -----
 fn notes_path() -> PathBuf {
     dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("."))
         .join("notes.jsonl")
+}
+
+fn settings_path() -> PathBuf {
+    dirs::home_dir().unwrap_or_else(|| PathBuf::from(".")).join("settings.json")
 }
 
 // -----Public function to Atomic Rewrite for editing a note and deleting a note from the list-----
@@ -43,13 +52,12 @@ pub fn now_string() -> String {
     Local::now().format("%Y-%m-%d %H:%M:%S").to_string()
 }
 
-// -----Generic confirmation prompting code since i use it in many places -----
-fn confirm_prompt(label: &str) -> io::Result<String> {
-    print!("{label}");
-    io::stdout().flush()?;
-    let mut s = String::new();
-    io::stdin().read_line(&mut s)?;
-    Ok(s.trim_end().to_lowercase().to_string())
+pub fn save_settings(settings: &mut Settings) -> io::Result<()> {
+    let path = settings_path();
+    let mut sett_file = OpenOptions::new().create(true).open(path)?;
+    serde_json::to_writer(&mut sett_file, &settings)?;
+    sett_file.write_all()?;
+    Ok(())
 }
 
 // ----- Public Function to add a note to the File -----

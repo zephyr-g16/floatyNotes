@@ -27,6 +27,27 @@ export default function App() {
 		}
 	}
 
+	async function newNote() {
+		setDraftContent("");
+		setMode("new");
+		setDraftTitle("");
+		setDraftIndex(null);
+		setLastFocused("title");
+		setSelected(null);
+
+		requestAnimationFrame(() => {
+			titleRef.current?.focus();
+		});
+	}
+	async function cancel() {
+		setDraftContent("");
+		setLastFocused(null);
+		setDraftTitle("");
+		setDraftIndex(null);
+		setSelected(null);
+		setMode("view");
+	}
+
 	async function saveNote() {
 		const title = draftTitle.trim();
 		const content = draftContent.trim();
@@ -133,13 +154,36 @@ export default function App() {
 			}
 		}, [mode, selected, draftNoteIndex, lastFocused]);
 
+	useEffect(() => {
+		function handleKeydown(e: KeyboardEvent) {
+			console.log("keydown: ", e.key, "meta: ", e.metaKey, "ctrl: ", e.ctrlKey);
+
+			const isEscape = e.key.toLowerCase() === "escape";
+			const isNewNoteShortcut = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "n";
+
+			if (isEscape) {
+				titleRef.current?.blur();
+				contentRef.current?.blur();
+				if (mode === "new") {
+					cancel();
+				}
+			}
+			if (isNewNoteShortcut) {
+				e.preventDefault();
+				newNote();
+			}
+		}
+		window.addEventListener("keydown", handleKeydown);
+		return () => {window.removeEventListener("keydown", handleKeydown);};
+	}, [mode]);
+
 	return (
 		<div style={{position: "relative", height: "100vh"}}>
 			<aside style={{transform: sideBarOpen ? "translateX(0)" : "translateX(-100%)", transition: "transform 200ms ease", zIndex: 2}}>
 				<div style={{display: "grid", gridTemplateColumns: "1fr auto", marginBottom: "12px", rowGap: "0px"}}>
 					<h2 style={{marginTop: 0}}>Notes</h2>
 					<button style={{justifySelf: "right"}}
-					  onClick={() => {setMode("new"); setDraftTitle(""); setDraftContent(""); setDraftIndex(null); setLastFocused(null); setSelected(null); }}>
+					  onClick={() => newNote()}>
 						+ New
 					</button>
 					<input className="noteSearch" type="search" placeholder="Search" aria-label="Search notes" style={{gridColumn: "1 / -1"}} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
@@ -165,6 +209,10 @@ export default function App() {
 											setDraftContent(n.content);
 											setDraftTitle(n.title);
 											setDraftIndex(realIndex);
+											(e.currentTarget as HTMLElement).blur();
+											requestAnimationFrame(() => {
+												titleRef.current?.focus();
+											});
 										}
 									}}>
 									<div style={{marginLeft: "6px"}}>{n.title || "(untitled)"}</div>
@@ -182,7 +230,7 @@ export default function App() {
 					<div style={{display: "grid", gridTemplateColumns: "auto 1fr", marginTop: "24px"}}>
 						<input ref={titleRef} type="text" placeholder="Enter Title..." style={{ gridColumn: "1 / -1", marginBottom: "8px"}} value={draftTitle} onChange={(e) => {setDraftTitle(e.target.value); setLastFocused("title");}} onFocus={() => setLastFocused("title")}/>
 						<textarea ref={contentRef} placeholder="Enter note..." rows={10} style={{gridColumn: "1 / -1"}} value={draftContent} onChange={(e) => {setDraftContent(e.target.value); setLastFocused("content");}} onFocus={() => setLastFocused("content")}/>
-						<button onClick={() => {setMode("view"); setDraftTitle(""); setDraftContent(""); setSelected(null); setLastFocused(null); }}>Cancel</button>
+						<button onClick={() => cancel()}>Cancel</button>
 					</div>
 				) : (
 					selectedNote ? (
