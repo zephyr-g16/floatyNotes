@@ -43,6 +43,12 @@ fn delete_note(index: usize) -> Result<(), String> {
     Ok(())
 }
 
+/* #[tauri::command]
+fn save_settings(settings: &str) -> Result<(), String> {
+    save_settings(&settings)?;
+    Ok(())
+} */
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![list_notes, add_note, edit_note, delete_note])

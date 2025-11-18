@@ -52,13 +52,13 @@ pub fn now_string() -> String {
     Local::now().format("%Y-%m-%d %H:%M:%S").to_string()
 }
 
-pub fn save_settings(settings: &mut Settings) -> io::Result<()> {
-    let path = settings_path();
-    let mut sett_file = OpenOptions::new().create(true).open(path)?;
-    serde_json::to_writer(&mut sett_file, &settings)?;
-    sett_file.write_all()?;
-    Ok(())
-}
+// pub fn save_settings() -> io::Result<()> {
+//     let path = settings_path();
+//     let mut sett_file = OpenOptions::new().create(true).open(path)?;
+//     serde_json::to_writer(&mut sett_file, &settings)?;
+//     sett_file.write_all(b"\n")?;
+//     Ok(())
+// }
 
 // ----- Public Function to add a note to the File -----
 pub fn append_note(title: &str, content: &str) -> io::Result<()> {

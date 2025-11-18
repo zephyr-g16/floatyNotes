@@ -10,7 +10,7 @@ export default function App() {
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [selected, setSelected] = useState<number | null>(null);
 	const [sideBarOpen, setSideBarOpen] = useState(true);
-	const [mode, setMode] = useState<"view" | "new">("view");
+	const [mode, setMode] = useState<"view" | "new" | "settings">("view");
 	const [draftTitle, setDraftTitle] = useState("");
 	const [draftContent, setDraftContent] = useState("");
 	const [draftNoteIndex, setDraftIndex] = useState<number | null>(null);
@@ -182,7 +182,7 @@ export default function App() {
 			<aside style={{transform: sideBarOpen ? "translateX(0)" : "translateX(-100%)", transition: "transform 200ms ease", zIndex: 2}}>
 				<div style={{display: "grid", gridTemplateColumns: "1fr auto", marginBottom: "12px", rowGap: "0px"}}>
 					<h2 style={{marginTop: 0}}>Notes</h2>
-					<button style={{justifySelf: "right"}}
+					<button style={{justifySelf: "right",  }}
 					  onClick={() => newNote()}>
 						+ New
 					</button>
@@ -223,14 +223,14 @@ export default function App() {
 			</aside>
 			<main className="mainCard" style={{marginLeft: sideBarOpen ? 260 : 20, transition: "margin-left 200ms ease"}}>
 				<button onClick={() => setSideBarOpen(o => !o)} aria-expanded={sideBarOpen} 
-				  style={{position: "absolute", top: 10, right: 10, zIndex: 10}}>
+				  style={{position: "absolute", top: 10, right: 10, zIndex: 10,  }}>
 					{sideBarOpen ? "Hide" : "Show"} Sidebar
 				</button>
 				{mode === "new" ? (
 					<div style={{display: "grid", gridTemplateColumns: "auto 1fr", marginTop: "24px"}}>
 						<input ref={titleRef} type="text" placeholder="Enter Title..." style={{ gridColumn: "1 / -1", marginBottom: "8px"}} value={draftTitle} onChange={(e) => {setDraftTitle(e.target.value); setLastFocused("title");}} onFocus={() => setLastFocused("title")}/>
 						<textarea ref={contentRef} placeholder="Enter note..." rows={10} style={{gridColumn: "1 / -1"}} value={draftContent} onChange={(e) => {setDraftContent(e.target.value); setLastFocused("content");}} onFocus={() => setLastFocused("content")}/>
-						<button onClick={() => cancel()}>Cancel</button>
+						<button style={{ }} onClick={() => cancel()}>Cancel</button>
 					</div>
 				) : (
 					selectedNote ? (
@@ -238,11 +238,14 @@ export default function App() {
 							<div style={{ opacity: 0.7, fontSize: 12}}>{selectedNote.ts}</div>
 							<input ref={titleRef} type="text" placeholder="Title" style={{gridColumn: "1/ -1", marginBottom: "8px"}} value={draftTitle} onChange={(e) => {setDraftTitle(e.target.value); setLastFocused("title");}}/>
 							<textarea ref={contentRef} placeholder="Edit note..." rows={12} style={{gridColumn: "1 / -1"}} value={draftContent} onChange={(e) => {setDraftContent(e.target.value); setLastFocused("content");}}/>
-							<button onClick={() => handleDeleteCurrent()}>Delete</button>
+							<button style={{ }} onClick={() => handleDeleteCurrent()}>Delete</button>
 						</div>
 					) : (
-					<div style={{ opacity: 0.6}}>Select a note from the left</div>
-				))}
+						mode === "settings" ? (
+						<div className="settings">settings placeholder</div>
+					) : (
+						<div style={{ opacity: 0.6}}>Select a note from the left</div>
+				)))}
 			</main>
 		</div>
 	)
