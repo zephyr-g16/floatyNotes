@@ -2,7 +2,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod notes;
-use notes::{append_note, now_string, load_notes, rewrite_all, Note};
+use notes::{append_note, now_string, load_notes, rewrite_all, save_settings, load_settings, Note, UserSettings};
+use tauri::{Manager, Emitter};
+use tauri_plugin_global_shortcut::{Code, Modifiers, ShortcutState};
+use tauri::webview::{WebviewWindowBuilder};
 
 #[tauri::command]
 fn list_notes() -> Result<Vec<Note>, String> {
@@ -43,15 +46,85 @@ fn delete_note(index: usize) -> Result<(), String> {
     Ok(())
 }
 
-/* #[tauri::command]
-fn save_settings(settings: &str) -> Result<(), String> {
-    save_settings(&settings)?;
-    Ok(())
-} */
+#[tauri::command]
+fn get_config() -> UserSettings {
+    notes::load_settings().unwrap_or(UserSettings { open_same: false, key_cmd: "CommandOrControl+N".into(),})
+}
+
+#[tauri::command]
+fn set_config(config: UserSettings) -> Result<(),String> {
+    notes::save_settings(&config).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn close_window(app: tauri::AppHandle) {
+    if let Some(win) = app.get_webview_window("main") {
+        let _ = win.close();
+    }
+    return;
+}
+
+#[tauri::command]
+async fn min_window(app: tauri::AppHandle) {
+    if let Some(win) = app.get_webview_window("main") {
+        let _ = win.minimize();
+    }
+    return;
+}
+
+#[tauri::command]
+async fn max_window(app: tauri::AppHandle) {
+    if let Some(win) = app.get_webview_window("main") {
+        let _ = win.maximize();
+    } 
+    return;
+}
+
+#[tauri::command]
+async fn open_prompt_window(app: tauri::AppHandle) {
+    //section here is to check if the window is made, and focused, and if not it decides to either close it if it is focused, or show it if it isnt focused, 
+    //or it moves on the the window builder to make it if it doesnt exist
+    if let Some(win) = app.get_webview_window("prompt") {
+        let visible = win.is_visible().unwrap_or(false);
+        let focused = win.is_focused().unwrap_or(false);
+        if visible && focused {
+            let _ = win.hide();
+        } else if visible && !focused {
+            let _ = win.set_focus();
+        } else {
+            let _ = win.show();
+            let _ = win.set_focus();
+        }
+        return;
+    }
+    
+    let _ = tauri::webview::WebviewWindowBuilder::new(
+        &app, "prompt", tauri::WebviewUrl::App("index.html#prompt".into()),
+    )
+    .title("").decorations(false).transparent(true).always_on_top(true).inner_size(600.0, 600.0).build();
+}
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![list_notes, add_note, edit_note, delete_note])
+        .setup(|app| {
+            #[cfg(desktop)]
+            {
+                app.handle().plugin(
+                    tauri_plugin_global_shortcut::Builder::new()
+                    .with_shortcuts(["alt+n"])?
+                    .with_handler(|app, shortcut, event| {
+                        if event.state == ShortcutState::Pressed {
+                            if shortcut.matches(Modifiers::ALT, Code::KeyN) {
+                                let _ = app.emit("shortcut-event", "Alt+n triggered");
+                            }
+                        }
+                    })
+                    .build(),
+                )?;
+            }
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![list_notes, add_note, edit_note, delete_note, set_config, get_config, open_prompt_window, close_window, min_window, max_window])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
