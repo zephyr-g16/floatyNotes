@@ -19,21 +19,11 @@
 	      "theme": "Dark",
         "decorations": false,
         "transparent": true,
-        "dragDropEnabled": false
+        "dragDropEnabled": true
       }
     ],
     "security": {
-      "capabilities": [
-        {
-          "identifier": "draggable-window",
-          "windows": [
-            "*"
-          ],
-          "permissions": [
-            "core:window:allow-start-dragging"
-          ]
-        }
-      ]
+      "csp": null
     }
   },
   "bundle": {

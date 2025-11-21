@@ -161,26 +161,48 @@ button:focus-visible {
 	height: 6px;
 	position: absolute;
 	margin-top: 12px;
-	z-index: 4;
+	z-index: 5;
 	border-radius: 8px;
 	transition: margin-left 200ms ease;
-
+	user-select: none;
 }
 
 .floatingWindow {
-	height: 100vh;
+	position: absolute;
+	width: 500px;
+	height: 600px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: transparent;
+	background: rgba(86, 86, 86, 0.646);
 	color: #eee;
 	font-family: Inter, system-ui, sans-serif;
-	border-radius: 8px;
-	-webkit-app-region: drag;
+	border-radius: 24px;
+	overflow: hidden;
+}
+
+.floatPanTitle {
+	background: rgba(64, 64, 64, 0.9);
+	width: 500px;
+	height: 48px;
+	top: 0px;
+	position: absolute;
+}
+
+.fwSecondPane {
+	position: absolute;
+	background: rgba(86, 86, 86, 0.80);
+	height: 590px;
+	width: 490px;
+	border-radius: 16px;
 }
 
 .floatingWindow textarea {
-	background: #000;
+	background: transparent;
+	margin-top: 32px;
+	height: 500px;
+	width: 490px;
+	border-radius: 16px;
 }
 
 aside {

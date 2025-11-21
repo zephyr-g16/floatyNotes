@@ -122,9 +122,10 @@ export default function App() {
 
 	function PromptApp() {
 		return (
-			<div className="floatingWindow">
-				<div style={{minWidth: 400, maxWidth: 600, padding: 16, borderRadius: 8}}>
-					<textarea placeholder="type your note ..." autoFocus></textarea>
+			<div data-tauri-drag-region className="floatingWindow">
+				<div className="fwSecondPane">				
+					<div data-tauri-drag-region className="floatPanTitle"></div>
+					<textarea></textarea>
 				</div>
 			</div>
 		)
@@ -140,6 +141,10 @@ export default function App() {
 
 	async function maxWindow() {
 		await invoke("max_window");
+	}
+
+	async function fullScreenWindow() {
+		await invoke("fullscreen_window");
 	}
 
 	//Search filtering, need to update this to handle phrases instead of just single strings like it does now
@@ -229,7 +234,7 @@ export default function App() {
 		loadSettings();
 	}, []);
 
-	//Global key command listener for prompt window
+	//Global key command listener for prompt window, simplified
 	useEffect(() => {
 		let off: (() => void) | null = null;
 
@@ -244,35 +249,15 @@ export default function App() {
 		};
 	}, []);
 
-/* 	//This is the global keyCmd listener. Its what brings up and hides the note prompt
-	useEffect(() => {
-		async function setup() {
-			const unlisten = listen("shortcut-event", async () => {
-				await invoke("open_prompt_window");
-			});
-			return unlisten;
-		}
-
-		let cleanup: (() => void) | null = null;
-
-		setup().then((unlisten) => {
-			cleanup = unlisten;
-		});
-
-		return () => {
-			cleanup?.();
-		};
-	}, []); */
-
 	return (
 		<div className="container">
 			<div data-tauri-drag-region className="mainWindow" style={{position: "relative", height: "100vh"}}>
 				<div className="trafficLightsContainer">
 					<button className="redLight" onClick={() => closeWindow()}></button>
 					<button className="yellowLight" onClick={() => minWindow()}></button>
-					<button className="greenLight" onClick={() => maxWindow()}></button>
+					<button className="greenLight" onClick={() => fullScreenWindow()}></button>
 				</div>
-				<div data-tauri-drag-region className="titleBar">
+				<div data-tauri-drag-region className="titleBar" onDoubleClick={() => maxWindow()}>
 					<div className="sideBarToggle" style={{marginLeft: sideBarOpen ? 175 : 72, transition: "margin-left 200ms ease"}}>	
 						<button onClick={() => {setSideBarOpen(o => !o)}} style={{width: "24px", height: "22px", padding: "2px"}}>|=</button>
 					</div>

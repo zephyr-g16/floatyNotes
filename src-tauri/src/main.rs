@@ -73,11 +73,23 @@ async fn min_window(app: tauri::AppHandle) {
 }
 
 #[tauri::command]
+async fn fullscreen_window(app: tauri::AppHandle) {
+    if let Some(win) = app.get_webview_window("main") {
+        let max = win.is_maximized().unwrap_or(false);
+        if (!max) {
+            let _ = win.set_fullscreen(true);
+        } else {
+            let _ = win.set_fullscreen(false);
+        }
+    } 
+    return;
+}
+
+#[tauri::command]
 async fn max_window(app: tauri::AppHandle) {
     if let Some(win) = app.get_webview_window("main") {
         let _ = win.maximize();
-    } 
-    return;
+    }
 }
 
 #[tauri::command]
@@ -91,9 +103,21 @@ async fn open_prompt_window(app: tauri::AppHandle) {
             let _ = win.hide();
         } else if visible && !focused {
             let _ = win.set_focus();
+            if let Some(main) = app.get_webview_window("main") {
+                let main_focused = main.is_minimized().unwrap_or(true);
+                if !main_focused {
+                    let _ = main.minimize();
+                }
+            }
         } else {
             let _ = win.show();
             let _ = win.set_focus();
+            if let Some(main) = app.get_webview_window("main") {
+                let main_focused = main.is_minimized().unwrap_or(true);
+                if !main_focused {
+                    let _ = main.minimize();
+                }
+            }
         }
         return;
     }
@@ -124,7 +148,7 @@ fn main() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![list_notes, add_note, edit_note, delete_note, set_config, get_config, open_prompt_window, close_window, min_window, max_window])
+        .invoke_handler(tauri::generate_handler![list_notes, add_note, edit_note, delete_note, set_config, get_config, open_prompt_window, close_window, min_window, fullscreen_window, max_window])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
