@@ -18,14 +18,13 @@ html, body, #root { height: 100%; margin: 0; padding: 0; width: 100%; height: 10
 .container {
 	background: transparent;
   margin: 0;
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
   user-select: none;
 }
 
 .mainWindow {
 	background: #2a2a2a;
-	border-radius: 12px;
 	z-index: 1;
 	user-select: none;
 }
@@ -100,7 +99,8 @@ ul {
 }
 
 .noteCard {
-	margin-top: 48px;
+	padding-top: 48px;
+	overflow: hidden !important;
 }
 
 button {
@@ -168,41 +168,63 @@ button:focus-visible {
 }
 
 .floatingWindow {
-	position: absolute;
+	position: relative;
 	width: 500px;
 	height: 600px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgba(86, 86, 86, 0.646);
+	background: rgb(58, 58, 58);
 	color: #eee;
 	font-family: Inter, system-ui, sans-serif;
-	border-radius: 24px;
 	overflow: hidden;
 }
 
 .floatPanTitle {
-	background: rgba(64, 64, 64, 0.9);
-	width: 500px;
+	position: absolute;	
+	background: rgba(58, 58, 58, 0.3);
+	width: 100%;
 	height: 48px;
-	top: 0px;
+	top: 0;
+	left: 0;
+	z-index: 3;
+	backdrop-filter: blur(4px);
+}
+
+.fwSendToNotesBtn {
 	position: absolute;
+	right: 0;
+	top: 0;
+	margin-top: 12px;
+	margin-right: 10px;
+}
+
+.fwClose {
+	position: absolute;
+	left: 0;
+	top: 0;
+	margin-left: 10px;
+	margin-top: 8px;
+	border-radius: 24px;
 }
 
 .fwSecondPane {
-	position: absolute;
-	background: rgba(86, 86, 86, 0.80);
+	position: relative;
+	background: transparent;
 	height: 590px;
-	width: 490px;
-	border-radius: 16px;
+	width: 480px;
+	border-radius: 8px;
+	backdrop-filter: blur(4px);
+	overflow: hidden;
 }
 
 .floatingWindow textarea {
+	box-sizing: border-box;
+	padding-top: 48px;
+	height: 100%;
+	width: 100%;
 	background: transparent;
-	margin-top: 32px;
-	height: 500px;
-	width: 490px;
-	border-radius: 16px;
+	resize: none;
 }
 
 aside {

@@ -123,9 +123,13 @@ export default function App() {
 	function PromptApp() {
 		return (
 			<div data-tauri-drag-region className="floatingWindow">
-				<div className="fwSecondPane">				
-					<div data-tauri-drag-region className="floatPanTitle"></div>
-					<textarea></textarea>
+				<div data-tauri-drag-region className="floatPanTitle">
+					<button className="fwSendToNotesBtn">send to notes</button>
+					<button className="fwClose">x</button>
+				</div>
+				<div className="fwSecondPane">
+					<div style={{width: "100%", height: "48px"}}></div>
+					<textarea style={{fontSize: 16}} placeholder="Start writing..."></textarea>
 				</div>
 			</div>
 		)
@@ -314,11 +318,11 @@ export default function App() {
 							</div>
 						) : (
 							selectedNote ? (
-								<div style={{ display: "grid", gridTemplateColumns: "auto 1fr", marginLeft: "12px"}}>
+								<div style={{ display: "grid", gridTemplateColumns: "auto 1fr", marginLeft: "12px", overflow: "hidden"}}>
 									<div style={{ opacity: 0.7, fontSize: 12}}>{selectedNote.ts}</div>
+									<button style={{ position: "absolute",marginRight: "8px", right: 0}} onClick={() => handleDeleteCurrent()}>Delete</button>
 									<input ref={titleRef} type="text" placeholder="Title" style={{gridColumn: "1/ -1", marginBottom: "8px"}} value={draftTitle} onChange={(e) => {setDraftTitle(e.target.value); setLastFocused("title");}}/>
-									<textarea ref={contentRef} placeholder="Edit note..." rows={12} style={{gridColumn: "1 / -1"}} value={draftContent} onChange={(e) => {setDraftContent(e.target.value); setLastFocused("content");}}/>
-									<button style={{ }} onClick={() => handleDeleteCurrent()}>Delete</button>
+									<textarea ref={contentRef} placeholder="Edit note..." rows={12} style={{gridColumn: "1 / -1", height: "100vh", width: "100%", resize: "none", fontSize: 16}} value={draftContent} onChange={(e) => {setDraftContent(e.target.value); setLastFocused("content");}}/>
 								</div>
 							) : (
 								mode === "settings" ? (

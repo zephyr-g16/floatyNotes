@@ -125,7 +125,7 @@ async fn open_prompt_window(app: tauri::AppHandle) {
     let _ = tauri::webview::WebviewWindowBuilder::new(
         &app, "prompt", tauri::WebviewUrl::App("index.html#prompt".into()),
     )
-    .title("").decorations(false).transparent(true).always_on_top(true).inner_size(600.0, 600.0).build();
+    .title("").always_on_top(true).decorations(false).inner_size(500.0, 600.0).build();
 }
 
 fn main() {
